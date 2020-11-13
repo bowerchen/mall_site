@@ -32,7 +32,10 @@
             font-size: 14px;
         }
         .modal-footer {
-            
+            height: 82px;
+            line-height: 82px;
+            text-align: center;
+            background-color: $colorJ;
         }
     }
 }
