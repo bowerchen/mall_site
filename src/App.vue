@@ -13,27 +13,26 @@ export default {
   },
   data: () => {
     return {
-      res: {}
+
     }
   },
   mounted() { 
-    // storage.setItem('a', 1)
-
-  //   this.axios.get('/user/login').then((res) => {
-  //     this.res = res
-  //   }).then((e) => {
-  //     console.log(e)
-  //   })
+    // if (this.$cookie.get('userId')) {
+      this.getUser();
+      this.getCartCount();
+    // }
   },
   methods: {
     getUser() {
-      this.axios.get('/user').then((res) => {
+      this.axios.get('/user').then((res={}) => {
         // to-do  保存到Vuex里面
+        console.log(res.username)
         this.$store.dispatch('saveUserName', res.username)
       })
     },
     getCartCount() {
-      this.axios.get('/carts/products/sum').then((res) => {
+      this.axios.get('/carts/products/sum').then((res=0) => {
+        console.log(res)
         this.$store.dispatch('saveCartCount', res)
       })
 

@@ -21,7 +21,7 @@
                         <a href="javascript:;" class="btn" @click="login()">登录</a>
                     </div>
                     <div class="tips">
-                        <div class="sms">手机短信登录/注册</div>
+                        <div class="sms" @click="register">手机短信登录/注册</div>
                         <div class="reg">
                             <a href="javascript:;"><span>立即注册</span></a>
                             <span>|</span>
@@ -56,6 +56,7 @@ export default {
     },
     methods: {
         login() {
+            console.log(this.username, this.password)
             let {username, password} = this;
             this.axios.post('/user/login', {
                 username,
@@ -69,6 +70,15 @@ export default {
             })
         },
         // ...mapActions([saveUserName])
+        register() {
+            this.axios.post('/user/register', {
+                username: 'admin4399',
+                password: 'admin4399',
+                email: 'admin4399@qq.com'
+            }).then(() => {
+                this.$message.success('注册成功')
+            })
+        }
     }
 }
 </script>

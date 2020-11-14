@@ -3,9 +3,11 @@ import axios from 'axios'
 import VueAxios from 'vue-axios'
 import App from './App.vue'
 import router from './router'
-import store from './store'
+import store from './store/index'
 import VueLazyLoad from 'vue-lazyload'
 import VueCookies from 'vue-cookie'
+
+import 'swiper/css/swiper.css'
 // import env from './env'
 
 const mock = true
