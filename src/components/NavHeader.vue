@@ -14,7 +14,7 @@
                     <a href="javascript:;" v-if="username">我的订单</a>
                     <a href="javascript:;" class="my-cart" @click="goToCart()">
                         <span class="icon-cart"></span>
-                        购物车
+                        购物车({{cartCount}})
                     </a>
                 </div>
             </div>
@@ -66,9 +66,16 @@ export default {
     name: 'nav-header',
     data() {
         return {
-            username: 'bowerchen',
-            phoneList: [],
+            phoneList: []
             
+        }
+    },
+    computed: {
+        username() {
+            return this.$store.state.username
+        },
+        cartCount() {
+            return this.$store.state.cartCount
         }
     },
     filters: {
@@ -80,6 +87,7 @@ export default {
     },
     mounted() {
         this.getProductList();
+        this.getCartCount();
     },
     methods: {
         login() {
@@ -94,6 +102,11 @@ export default {
                 if (res.list.length > 6) {
                     this.phoneList = res.list.slice(0, 6);
                 }
+            })
+        },
+        getCartCount() {
+            this.axios.get('/carts/products/sum').then((res=0) => {
+                this.$store.dispatch('saveCartCount', res)
             })
         },
         goToCart() {

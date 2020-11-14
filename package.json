@@ -35,7 +35,8 @@
         "vue-cookie": "^1.1.4",
         "vue-lazyload": "^1.3.3",
         "vue-template-compiler": "^2.6.11",
-        "vuex": "^3.5.1"
+        "vuex": "^3.5.1",
+        "vuex-persistedstate": "^4.0.0-beta.1"
     },
     "eslintConfig": {
         "root": true,
