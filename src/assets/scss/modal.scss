@@ -4,6 +4,16 @@
 .modal {
     @include position(fixed);
     z-index: 19;
+    transition: all .5s;
+    &.slide-fade-enter-active {
+        top: 0;
+    }
+    &.slide-fade-leave-active {
+        top: -100%;
+    }
+    &.slide-fade-enter {
+        top: -100%;
+    }
     .mask {
         @include position(fixed);
         background-color: rgba($colorI, .5);
