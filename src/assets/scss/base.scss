@@ -1,3 +1,4 @@
+@import './mixin.scss';
 .container {
     position: relative;
     width: 1226px;
@@ -16,3 +17,24 @@ input {
     box-sizing: border-box;
     font-size: 14px;
 }
+
+.fl {
+    float: left;
+}
+
+.fr {
+    float: right;
+}
+
+.clearfix {
+    &:before, &:after {
+        content: ' ';
+        display: table;
+    }
+    &:after {
+        clear: both;
+    }
+}
+
+
+

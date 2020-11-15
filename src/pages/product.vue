@@ -82,7 +82,6 @@ export default {
     },
     mounted() {
         this.getProductInfo()
-        console.log(this.showSlide)
     },
     methods: {
         getProductInfo() {

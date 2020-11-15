@@ -10,10 +10,10 @@ import VueCookies from 'vue-cookie'
 import 'swiper/css/swiper.css'
 // import env from './env'
 
-const mock = true
-if (mock) {
-    require('./mock/api')
-}
+// const mock = true
+// if (mock) {
+//     require('./mock/api')
+// }
 
 // 根据前端的跨域方式做调整
 axios.defaults.baseURL = '/api'
@@ -32,6 +32,7 @@ axios.interceptors.response.use((response) => {
         if (path != '#/index') {
             window.location.href = '/#/login'
         }
+        return Promise.reject(res)
     } else {
         alert(res.msg)
         return Promise.reject(res)

@@ -104,7 +104,7 @@
         <modal 
             title="提示"
             sureText="查看购物车"
-            btnType="3"
+            btnType="1"
             modalType="middle"
             :showModal="showModal"
             @submit="goToCart"
@@ -380,22 +380,20 @@
             //     // return false
             // },
             // 购物车功能
-            addCart() {
-                this.showModal = true
-            /*
+            addCart(id) {
                 this.axios.post('/carts', {
                     productId: id,
                     selected: true
                 }).then((res) => {
-
+                    this.showModal = true
+                    this.$store.dispatch('saveCartCount', res.cartTotalQuantity)
                 }).catch(() => {
                     this.showModal = true
                 })
-            */
             },
             goToCart() {
                 this.$router.push('/cart')
-            }
+            },
         }
     }
 </script>

@@ -26,16 +26,13 @@ export default {
     getUser() {
       this.axios.get('/user').then((res={}) => {
         // to-do  保存到Vuex里面
-        console.log(res.username)
         this.$store.dispatch('saveUserName', res.username)
       })
     },
     getCartCount() {
       this.axios.get('/carts/products/sum').then((res=0) => {
-        console.log(res)
         this.$store.dispatch('saveCartCount', res)
       })
-
     }
   }
 
