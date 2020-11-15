@@ -12,7 +12,4 @@ module.exports = {
             }
         }
     },
-    css: {
-        
-    }
 }

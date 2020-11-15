@@ -6,6 +6,8 @@ import router from './router'
 import store from './store/index'
 import VueLazyLoad from 'vue-lazyload'
 import VueCookies from 'vue-cookie'
+import { Message } from 'element-ui'
+import 'element-ui/lib/theme-chalk/index.css'
 
 import 'swiper/css/swiper.css'
 // import env from './env'
@@ -34,13 +36,15 @@ axios.interceptors.response.use((response) => {
         }
         return Promise.reject(res)
     } else {
-        alert(res.msg)
+        // alert(res.msg)
+        this.$message.warning(res.msg)
         return Promise.reject(res)
     }
 })
 
 Vue.use(VueAxios, axios)
 Vue.use(VueCookies)
+Vue.prototype.$message = Message
 Vue.use(VueLazyLoad, {
     loading: '/imgs/loading-svg/loading-bars.svg'
 })

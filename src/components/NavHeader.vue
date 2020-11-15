@@ -11,6 +11,7 @@
                 <div class="topbar-user">
                     <a href="javascript:;" v-if="username">{{username}}</a>
                     <a href="javascript:;" v-if="!username" @click="login()">登录</a>
+                    <a href="javascript:;" v-if="username" @click="logout()">退出</a>
                     <a href="javascript:;" v-if="username">我的订单</a>
                     <a href="javascript:;" class="my-cart" @click="goToCart()">
                         <span class="icon-cart"></span>
@@ -87,11 +88,22 @@ export default {
     },
     mounted() {
         this.getProductList();
-        this.getCartCount();
+        let params = this.$route.params;
+        if(params && params.from == 'login') {
+            this.getCartCount();
+        }
     },
     methods: {
         login() {
             this.$router.push('/login')
+        },
+        logout() {
+            this.axios.post('/user/logout').then(() => {
+                this.$message.success('退出成功')
+                this.$cookie.set('userId', '', {expries: '-1'})
+                this.$store.dispatch('saveUserName', '')
+                this.$store.dispatch('saveCartCount', '0')
+            })
         },
         getProductList() {
             this.axios.get('/products', {
