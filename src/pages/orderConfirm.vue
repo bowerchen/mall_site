@@ -61,7 +61,7 @@
                                     <img v-lazy="item.productMainImage" alt="">
                                     <span>{{item.productName + ' ' + item.productSubtitle}}</span>
                                 </div>
-                                <div class="goods-price">{{item.productPrice}}元 x {{item.quantity}}</div>
+                                <div class="goods-price">{{item.productPrice}}元x{{item.quantity}}</div>
                                 <div class="goods-total">{{item.productTotalPrice}}元</div>
                             </li>
                         </ul>
@@ -174,10 +174,12 @@ export default {
             list: [], // 收获地址列表
             cartList: [], // 购物车中需要结算的商品列表
             cartTotalPrice: 0,
+            count: 0, // 商品结算件数
         }
     },
     mounted() {
-
+        this.getAddressList()
+        this.getCartList()
     },
     methods: {
         getAddressList() {
@@ -190,7 +192,9 @@ export default {
                 let list = res.cartProductVoList
                 this.cartTotalPrice = res.cartTotalPrice
                 this.cartList = list.filter(item=>item.productSelected)
-
+                list.map((item) => {
+                    this.count += item.quantity
+                })
             })
         }
     }
