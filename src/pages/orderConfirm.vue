@@ -106,29 +106,29 @@
         </div>
         <modal
             title="新增确认"
-            btnType="1"
+            btnType="3"
             :showModal="showEditModal"
             @cancel="showEditModal=false"
             @submit="submitAddress"
         >
-            <template>
+            <template v-slot:body>
                 <div class="edit-wrap">
                     <div class="item">
                         <input type="text" class="input" placeholder="姓名" v-model="checkedItem.receiverName">
                         <input type="text" class="input" placeholder="手机号" v-model="checkedItem.receiverMobile">
                     </div>
                     <div class="item">
-                        <select name="province" v-model="checkItem.receiverProvice">
+                        <select name="province" v-model="checkedItem.receiverProvince">
                             <option value="北京">北京</option>
                             <option value="天津">天津</option>
                             <option value="河北">河北</option>
                         </select>
-                        <select name="city" v-model="checkItem.receiverCity">
+                        <select name="city" v-model="checkedItem.receiverCity">
                             <option value="北京">北京</option>
                             <option value="天津">天津</option>
                             <option value="河北">河北</option>
                         </select>
-                        <select name="district" v-model="checkItem.receiverDistrict">
+                        <select name="district" v-model="checkedItem.receiverDistrict">
                             <option value="北京">昌平区</option>
                             <option value="天津">海淀区</option>
                             <option value="河北">东城区</option>
@@ -141,14 +141,14 @@
                         <textarea name="street"  v-model="checkedItem.receiverAddress"></textarea>
                     </div>
                     <div class="item">
-                        <input type="text" class="input" placeholder="邮编" v-model="checkItem.receiverZip">
+                        <input type="text" class="input" placeholder="邮编" v-model="checkedItem.receiverZip">
                     </div>
                 </div>
             </template>
         </modal>
         <modal
             title="删除确认"
-            btnType="1"
+            btnType="3"
             :showModal="showDelModal"
             @cancel="showDelModal=false"
             @submit="submitAddress"
@@ -173,8 +173,13 @@ export default {
         return {
             list: [], // 收获地址列表
             cartList: [], // 购物车中需要结算的商品列表
-            cartTotalPrice: 0,
+            cartTotalPrice: 0,  // 购物车总金额
             count: 0, // 商品结算件数
+            checkedItem: {}, // 选中的商品对象
+            userAction: '', // 用户行为 0:新增  1:编辑  2:删除
+            showDelModal: false, // 是否显示删除弹框
+            showEditModal: false, // 是否显示新增或编辑弹框
+            checkIndex: 0 // 当前收货地址选中索引
         }
     },
     mounted() {
@@ -196,13 +201,105 @@ export default {
                     this.count += item.quantity
                 })
             })
+        },
+        // 打开新增地址弹框
+        openAddressModal() {
+          this.userAction = 0
+          this.checkedItem = {}
+          this.showEditModal = true
+        },
+        // 编辑地址弹框
+        editAddressModal(item) {
+          this.userAction = 1
+          this.checkedItem = item
+          this.showEditModal = true
+        },
+        // 删除地址
+        delAddress(item) {
+          this.checkedItem = item
+          this.userAction = 2
+          this.showDelModal = true
+        },
+        // 地址删除、编辑、新增功能
+        submitAddress() {
+          let { checkedItem, userAction } = this
+          let method, url, params = {}
+          
+          if(userAction == 0){
+            method = 'post',url = '/shippings';
+          }else if(userAction == 1){
+            method = 'put',url = `/shippings/${checkedItem.id}`;
+          }else {
+            method = 'delete',url = `/shippings/${checkedItem.id}`;
+          }
+
+          if(userAction == 0 || userAction ==1){
+            let { receiverName, receiverMobile, receiverProvince, receiverCity, receiverDistrict, receiverAddress, receiverZip} = checkedItem;
+            let errMsg='';
+            if(!receiverName){
+              errMsg = '请输入收货人名称';
+            }else if(!receiverMobile || !/\d{11}/.test(receiverMobile)){
+              errMsg = '请输入正确格式的手机号';
+            }else if(!receiverProvince){
+              errMsg = '请选择省份';
+            }else if(!receiverCity){
+              errMsg = '请选择对应的城市';
+            }else if(!receiverAddress || !receiverDistrict){
+              errMsg = '请输入收货地址';
+            }else if(!/\d{6}/.test(receiverZip)){
+              errMsg = '请输入六位邮编';
+            }
+            if(errMsg){
+              this.$message.error(errMsg);
+              return;
+            }
+            params = {
+              receiverName,
+              receiverMobile,
+              receiverProvince,
+              receiverCity,
+              receiverDistrict,
+              receiverAddress,
+              receiverZip
+            }
         }
+
+        this.axios[method](url, params).then(() => {
+          this.closeModal()
+          this.getAddressList()
+          this.$message.success('操作成功')
+        })
+      },
+      closeModal() {
+        this.checkedItem = {}
+        this.userAction = ''
+        this.showDelModal = false
+        this.showEditModal = false
+      },
+      // 订单提交
+      orderSubmit() {
+        let item = this.list[this.checkIndex]
+        if (!item) {
+          this.$message.error('请选择一个收货地址')
+          return;
+        }
+        this.axios.post('/orders', {
+          shippingId: item.id
+        }).then((res) => {
+          this.$router.push({
+            path: '/order/pay',
+            query: {
+              orderNo: res.orderNo
+            }
+          })
+        })
+      }
     }
 }
 </script>
 
 <style scoped lang="scss">
-.order-confirm{
+ .order-confirm{
     .wrapper{
       background-color:#F5F5F5;
       padding-top:30px;
@@ -277,7 +374,7 @@ export default {
             }
           }
         }
-        .item-good{
+        .item-goods{
           margin-top:34px;
           border-bottom: 1px solid #E5E5E5;
           padding-bottom: 12px;
@@ -293,7 +390,7 @@ export default {
             margin-top:10px;
             font-size:16px;
             color:#333333;
-            .good-name{
+            .goods-name{
               flex:5;
               img{
                 width:30px;
@@ -301,10 +398,10 @@ export default {
                 vertical-align:middle;
               }
             }
-            .good-price{
+            .goods-price{
               flex:2;
             }
-            .good-total{
+            .goods-total{
               padding-right:44px;
               color:#FF6600;
             }
