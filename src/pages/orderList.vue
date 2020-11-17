@@ -47,7 +47,7 @@
             </div>
           </div>
           <el-pagination
-            v-if="false"
+            v-if="true"
             class="pagination"
             background
             layout="prev, pager, next"
@@ -63,7 +63,7 @@
             v-infinite-scroll="scrollMore"
             infinite-scroll-disabled="true"
             infinite-scroll-distance="100"
-            v-if="showNextPage"
+            v-if="false"
           >
             <img src="/imgs/loading-svg/loading-spinning-bubbles.svg" alt="" v-show="loading">
           </div>
