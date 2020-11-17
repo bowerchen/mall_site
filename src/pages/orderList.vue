@@ -67,7 +67,7 @@
           >
             <img src="/imgs/loading-svg/loading-spinning-bubbles.svg" alt="" v-show="loading">
           </div>
-          <no-data v-if="!loading && list.length==0"></no-data>
+          <no-data v-if="!loading && list.length == 0"></no-data>
         </div>
       </div>
     </div>
@@ -96,7 +96,7 @@ export default {
       return {
         loading: true,
         list: [],
-        pageSize: 2,
+        pageSize: 4,
         pageNum: 1,
         total: 0,
         showNextPage: true, // 加载更多：是否显示按钮
@@ -145,7 +145,7 @@ export default {
         setTimeout(()=>{
           this.pageNum++;
           this.getList();
-        }, 500);
+        }, 1000);
       },
       // 专门给scrollMore使用
       getList(){
